@@ -1,1 +1,18 @@
 @import '~purecss-sass/vendor/assets/stylesheets/purecss';
+
+.app {
+    width: 100%;
+    text-align: center;
+    div {
+        margin: 0 auto;
+        .droparea {
+            background-color: lightgray;
+            padding: 15px;
+            margin: 15px;
+        }
+        .members {
+            text-align: left;
+            font-size: 20px;
+        }
+    }
+}
