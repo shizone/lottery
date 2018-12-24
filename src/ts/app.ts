@@ -5,14 +5,17 @@ import { app } from 'hyperapp'
 import { div, h1, ol, li, button } from '@hyperapp/html'
 
 const state = {
-  members: []
+  members: [],
+  current: 0
 }
 
 const actions = {
-  shuffle: () => (state: any) => ({members: _.shuffle(state.members)}),
+  shuffle: () => (state: any) => ({members: _.shuffle(state.members), current: 0}),
   dragover: (e: any) => (state: any) => dragOverHandler(e),
   drop: (e: any) => (state: any, actions: any) => dropHandler(e, state, actions),
-  update: () => (state: any) => ({menbers: state.members})
+  update: () => (state: any) => ({menbers: state.members, current: 0}),
+  prev: () => (state: any) => ({menbers: state.members, current: 0 < state.current ? state.current - 1 : state.current}),
+  next: () => (state: any) => ({menbers: state.members, current: state.current < state.members.length ? state.current + 1 : state.current})
 }
 
 function dragOverHandler(e: any) {
@@ -55,10 +58,23 @@ const view = (state: any, actions: any) =>
       }, '順番を並べ替える')]),
       ol({
         class: 'members'
-      }, _.map(state.members, (member: any) => 
-        li(member.displayName + '(' + member.userName + ')')
+      }, _.map(state.members, (member: any, index: number) => 
+        li(
+          {class: index === state.current ? 'current' : ''}, 
+          member.displayName + '(' + member.userName + ')')
       ))
     ])
   ])
 
 const main = app(state, actions, view, document.body)
+console.log('main')
+
+document.onkeyup = (e) => {
+  console.log('onkeypress')
+  console.log(e)
+  if (e.keyCode === 37)  {
+    main.prev()
+  } else if (e.keyCode === 39)  {
+    main.next()
+  }
+}
