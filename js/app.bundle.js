@@ -395,13 +395,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var state = {
-    members: []
+    members: [],
+    current: 0
 };
 var actions = {
-    shuffle: function () { return function (state) { return ({ members: __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.shuffle(state.members) }); }; },
+    shuffle: function () { return function (state) { return ({ members: __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.shuffle(state.members), current: 0 }); }; },
     dragover: function (e) { return function (state) { return dragOverHandler(e); }; },
     drop: function (e) { return function (state, actions) { return dropHandler(e, state, actions); }; },
-    update: function () { return function (state) { return ({ menbers: state.members }); }; }
+    update: function () { return function (state) { return ({ menbers: state.members, current: 0 }); }; },
+    prev: function () { return function (state) { return ({ menbers: state.members, current: 0 < state.current ? state.current - 1 : state.current }); }; },
+    next: function () { return function (state) { return ({ menbers: state.members, current: state.current < state.members.length ? state.current + 1 : state.current }); }; }
 };
 function dragOverHandler(e) {
     e.preventDefault();
@@ -441,13 +444,24 @@ var view = function (state, actions) {
                 }, '順番を並べ替える')]),
             Object(__WEBPACK_IMPORTED_MODULE_2__hyperapp_html__["e" /* ol */])({
                 class: 'members'
-            }, __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.map(state.members, function (member) {
-                return Object(__WEBPACK_IMPORTED_MODULE_2__hyperapp_html__["d" /* li */])(member.displayName + '(' + member.userName + ')');
+            }, __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.map(state.members, function (member, index) {
+                return Object(__WEBPACK_IMPORTED_MODULE_2__hyperapp_html__["d" /* li */])({ class: index === state.current ? 'current' : '' }, member.displayName + '(' + member.userName + ')');
             }))
         ])
     ]);
 };
 var main = Object(__WEBPACK_IMPORTED_MODULE_1_hyperapp__["a" /* app */])(state, actions, view, document.body);
+console.log('main');
+document.onkeyup = function (e) {
+    console.log('onkeypress');
+    console.log(e);
+    if (e.keyCode === 37) {
+        main.prev();
+    }
+    else if (e.keyCode === 39) {
+        main.next();
+    }
+};
 
 
 /***/ }),
